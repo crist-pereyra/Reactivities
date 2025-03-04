@@ -1,3 +1,4 @@
+using Application.Activities.Queries;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -13,6 +14,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 //Add Cors
 builder.Services.AddCors();
+
+//Add MediatR (usando RegisterServicesFromAssemblyContaining para buscar los handlers, en este caso GetActivityList.Handler, luego cualquiera de los handlers se registrara automaticamente)
+builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>());
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 var app = builder.Build();
