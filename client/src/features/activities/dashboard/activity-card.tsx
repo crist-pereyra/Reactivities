@@ -1,5 +1,4 @@
-import { Activity } from '@/app/interfaces/activity';
-import { useActivityStore } from '@/app/stores/activity.store';
+import { Activity } from '@/lib/interfaces/activity';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,7 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { useActivities } from '@/lib/hooks/useActivities';
 import { format } from 'date-fns';
+import { useActivityStore } from '@/lib/stores/activity.store';
 
 interface Props {
   activity: Activity;
@@ -19,9 +20,7 @@ export const ActivityCard = ({ activity }: Props) => {
   const handleSelectActivity = useActivityStore(
     (state) => state.handleSelectActivity
   );
-  const handleDeleteActivity = useActivityStore(
-    (state) => state.handleDeleteActivity
-  );
+  const { deleteActivity } = useActivities();
   return (
     <Card>
       <CardHeader>
@@ -44,7 +43,8 @@ export const ActivityCard = ({ activity }: Props) => {
           </Button>
           <Button
             variant='destructive'
-            onClick={() => handleDeleteActivity(activity.id)}
+            onClick={() => deleteActivity.mutate(activity.id)}
+            disabled={deleteActivity.isPending}
           >
             Delete
           </Button>

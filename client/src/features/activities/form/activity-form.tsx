@@ -3,18 +3,19 @@ import { Form } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { activitySchema } from '@/app/validations/activity.schema';
+import { activitySchema } from '@/lib/validations/activity.schema';
 import { InputField } from '@/components/fields/input-field';
 import { TextareaField } from '@/components/fields/textarea-field';
 import { Button } from '@/components/ui/button';
 import { DatePickerField } from '@/components/fields/date-picker-field';
-import { useActivityStore } from '@/app/stores/activity.store';
-import { Activity } from '@/app/interfaces/activity';
+import { Activity } from '@/lib/interfaces/activity';
+import { useActivities } from '@/lib/hooks/useActivities';
+import { useActivityStore } from '@/lib/stores/activity.store';
 
 export const ActivityForm = () => {
   const handleCloseForm = useActivityStore((state) => state.handleCloseForm);
   const selectedActivity = useActivityStore((state) => state.selectedActivity);
-  const handleSubmitForm = useActivityStore((state) => state.handleSubmitForm);
+  const { updateActivity, createActivity } = useActivities();
   const form = useForm<z.infer<typeof activitySchema>>({
     resolver: zodResolver(activitySchema),
     defaultValues: selectedActivity
@@ -27,10 +28,16 @@ export const ActivityForm = () => {
           venue: '',
         },
   });
-  const onSubmit = (data: z.infer<typeof activitySchema>) => {
+  const onSubmit = async (data: z.infer<typeof activitySchema>) => {
     const params = { ...data } as Activity;
-    if (selectedActivity) params.id = selectedActivity.id;
-    handleSubmitForm(params);
+    if (selectedActivity) {
+      params.id = selectedActivity.id;
+      await updateActivity.mutateAsync(params);
+    } else {
+      await createActivity.mutateAsync(params);
+    }
+    handleCloseForm();
+    // updateActivity(params);
   };
   return (
     <Card>
@@ -58,7 +65,10 @@ export const ActivityForm = () => {
               <Button type='button' onClick={handleCloseForm} variant='ghost'>
                 Cancel
               </Button>
-              <Button type='submit'>
+              <Button
+                type='submit'
+                disabled={updateActivity.isPending || createActivity.isPending}
+              >
                 {selectedActivity ? 'Save' : 'Create'}
               </Button>
             </div>

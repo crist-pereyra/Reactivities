@@ -1,5 +1,4 @@
-import { Activity } from '@/app/interfaces/activity';
-import { useActivityStore } from '@/app/stores/activity.store';
+import { Activity } from '@/lib/interfaces/activity';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -9,16 +8,22 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { useActivities } from '@/lib/hooks/useActivities';
 import { format } from 'date-fns';
+import { ActivityDetailSkeleton } from '../skeleton/activity-detail-skeleton';
+import { useActivityStore } from '@/lib/stores/activity.store';
 
 interface Props {
-  activity: Activity;
+  selectedActivity: Activity;
 }
-export const ActivityDetail = ({ activity }: Props) => {
+export const ActivityDetail = ({ selectedActivity }: Props) => {
   const handleCancelSelectActivity = useActivityStore(
     (state) => state.handleCancelSelectActivity
   );
   const handleOpenForm = useActivityStore((state) => state.handleOpenForm);
+  const { activities } = useActivities();
+  const activity = activities?.find((a) => a.id === selectedActivity.id);
+  if (!activity) return <ActivityDetailSkeleton />;
   return (
     <Card className='pt-0 overflow-hidden'>
       <img

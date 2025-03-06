@@ -1,4 +1,4 @@
-import { Activity } from '@/app/interfaces/activity';
+import { Activity } from '@/lib/interfaces/activity';
 import { ActivityCard } from './activity-card';
 
 interface Props {

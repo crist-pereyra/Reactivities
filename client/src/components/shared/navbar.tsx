@@ -1,7 +1,7 @@
 import { Users } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ModeToggle } from './mode-toggle';
-import { useActivityStore } from '@/app/stores/activity.store';
+import { useActivityStore } from '@/lib/stores/activity.store';
 
 export const Navbar = () => {
   const handleOpenForm = useActivityStore((state) => state.handleOpenForm);
