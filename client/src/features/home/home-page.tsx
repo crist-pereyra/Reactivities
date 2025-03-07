@@ -296,7 +296,7 @@ export const HomePage = () => {
             <Link to='/activities'>
               <Button
                 className={cn(
-                  'px-6 py-6 rounded-full font-medium text-base mx-auto',
+                  'px-8! py-6 rounded-full font-medium text-base mx-auto',
                   'bg-gradient-to-r shadow-lg',
                   'group flex items-center gap-2',
                   isDark
