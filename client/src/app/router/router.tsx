@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import App from '../layout/App';
 import {
   ActivityDashboard,
-  ActivityDetail,
+  ActivityDetailPage,
   ActivityForm,
   HomePage,
 } from '@/features';
@@ -26,7 +26,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'activities/:id',
-        element: <ActivityDetail />,
+        element: <ActivityDetailPage />,
       },
       {
         path: 'manage/:id',
