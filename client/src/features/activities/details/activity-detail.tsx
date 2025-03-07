@@ -1,4 +1,3 @@
-import { Activity } from '@/lib/interfaces/activity';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -11,21 +10,16 @@ import {
 import { useActivities } from '@/lib/hooks/useActivities';
 import { format } from 'date-fns';
 import { ActivityDetailSkeleton } from '../skeleton/activity-detail-skeleton';
-import { useActivityStore } from '@/lib/stores/activity.store';
+import { Link, Navigate, useParams } from 'react-router-dom';
 
-interface Props {
-  selectedActivity: Activity;
-}
-export const ActivityDetail = ({ selectedActivity }: Props) => {
-  const handleCancelSelectActivity = useActivityStore(
-    (state) => state.handleCancelSelectActivity
-  );
-  const handleOpenForm = useActivityStore((state) => state.handleOpenForm);
-  const { activities } = useActivities();
-  const activity = activities?.find((a) => a.id === selectedActivity.id);
-  if (!activity) return <ActivityDetailSkeleton />;
+export const ActivityDetail = () => {
+  const { id } = useParams();
+  const { activity, isActivityLoading } = useActivities(id);
+  if (isActivityLoading) return <ActivityDetailSkeleton />;
+  if (!id || !activity) return <Navigate to={'/activities'} />;
+
   return (
-    <Card className='pt-0 overflow-hidden'>
+    <Card className='pt-0 overflow-hidden mt-20'>
       <img
         src={`/images/category-images/${activity.category}.jpg`}
         alt={activity.title}
@@ -41,9 +35,11 @@ export const ActivityDetail = ({ selectedActivity }: Props) => {
         <p>{activity.description}</p>
       </CardContent>
       <CardFooter className='flex justify-between'>
-        <Button onClick={() => handleOpenForm(activity.id)}>Edit</Button>
-        <Button variant='destructive' onClick={handleCancelSelectActivity}>
-          Cancel
+        <Button asChild>
+          <Link to={`/manage/${activity.id}`}>Edit</Link>
+        </Button>
+        <Button variant='destructive' asChild>
+          <Link to={'/activities'}>Cancel</Link>
         </Button>
       </CardFooter>
     </Card>

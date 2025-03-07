@@ -10,16 +10,17 @@ import { Button } from '@/components/ui/button';
 import { DatePickerField } from '@/components/fields/date-picker-field';
 import { Activity } from '@/lib/interfaces/activity';
 import { useActivities } from '@/lib/hooks/useActivities';
-import { useActivityStore } from '@/lib/stores/activity.store';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const ActivityForm = () => {
-  const handleCloseForm = useActivityStore((state) => state.handleCloseForm);
-  const selectedActivity = useActivityStore((state) => state.selectedActivity);
-  const { updateActivity, createActivity } = useActivities();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { updateActivity, createActivity, activity, isActivityLoading } =
+    useActivities(id);
   const form = useForm<z.infer<typeof activitySchema>>({
     resolver: zodResolver(activitySchema),
-    defaultValues: selectedActivity
-      ? { ...selectedActivity, date: new Date(selectedActivity.date) }
+    defaultValues: activity
+      ? { ...activity, date: new Date(activity.date) }
       : {
           title: '',
           description: '',
@@ -30,19 +31,21 @@ export const ActivityForm = () => {
   });
   const onSubmit = async (data: z.infer<typeof activitySchema>) => {
     const params = { ...data } as Activity;
-    if (selectedActivity) {
-      params.id = selectedActivity.id;
+    if (activity) {
+      params.id = activity.id;
       await updateActivity.mutateAsync(params);
+      navigate(`/activities/${params.id}`);
     } else {
-      await createActivity.mutateAsync(params);
+      createActivity.mutate(params, {
+        onSuccess: (id) => navigate(`/activities/${id}`),
+      });
     }
-    handleCloseForm();
-    // updateActivity(params);
   };
+  if (isActivityLoading) return <></>;
   return (
-    <Card>
+    <Card className='mt-20'>
       <CardHeader>
-        <CardTitle>{selectedActivity ? 'Edit' : 'Create'} Activity</CardTitle>
+        <CardTitle>{activity ? 'Edit' : 'Create'} Activity</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -62,14 +65,14 @@ export const ActivityForm = () => {
             <InputField form={form} id='city' label='City' />
             <InputField form={form} id='venue' label='Venue' />
             <div className='flex gap-2 justify-end items-center'>
-              <Button type='button' onClick={handleCloseForm} variant='ghost'>
+              <Button type='button' onClick={() => {}} variant='ghost'>
                 Cancel
               </Button>
               <Button
                 type='submit'
                 disabled={updateActivity.isPending || createActivity.isPending}
               >
-                {selectedActivity ? 'Save' : 'Create'}
+                {activity ? 'Save' : 'Create'}
               </Button>
             </div>
           </form>

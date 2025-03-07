@@ -1,15 +1,24 @@
-import { Activity } from '@/lib/interfaces/activity';
+import { ActivityCardSkeleton } from '../skeleton/activity-card-skeleton';
 import { ActivityCard } from './activity-card';
+import { useActivities } from '@/lib/hooks/useActivities';
 
-interface Props {
-  activities: Activity[];
-}
-export const ActivityList = ({ activities }: Props) => {
+export const ActivityList = () => {
+  const { activities, isPending } = useActivities();
   return (
     <div className='flex flex-col gap-3 p-6 mt-14'>
-      {activities.map((activity) => (
-        <ActivityCard activity={activity} key={activity.id} />
-      ))}
+      {!activities || isPending ? (
+        <>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <ActivityCardSkeleton key={i} />
+          ))}
+        </>
+      ) : (
+        <>
+          {activities.map((activity) => (
+            <ActivityCard activity={activity} key={activity.id} />
+          ))}
+        </>
+      )}
     </div>
   );
 };
