@@ -2,15 +2,19 @@ import activityApi from '@/lib/api/activity.api';
 import { Activity } from '@/lib/interfaces/activity';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
 
 export const useActivities = (id?: string) => {
   const queryClient = useQueryClient();
+  const location = useLocation();
   const { data: activities, isPending } = useQuery({
     queryKey: ['activities'],
     queryFn: async () => {
       const { data } = await activityApi.get<Activity[]>('/activities');
       return data;
     },
+    enabled: !id && location.pathname === '/activities',
+    // staleTime: 1000 * 60 * 5,
   });
   const { data: activity, isLoading: isActivityLoading } = useQuery({
     queryKey: ['activity', id],
