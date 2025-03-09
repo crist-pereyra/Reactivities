@@ -1,5 +1,8 @@
+using API.Middleware;
 using Application.Activities.Queries;
+using Application.Activities.Validators;
 using Application.Core;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -17,16 +20,27 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddCors();
 
 //Add MediatR (usando RegisterServicesFromAssemblyContaining para buscar los handlers, en este caso GetActivityList.Handler, luego cualquiera de los handlers se registrara automaticamente)
-builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>());
+builder.Services.AddMediatR(x =>
+{
+    x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>();
+    x.AddOpenBehavior(typeof(ValidationBeahavior<,>));
+});
 
 //Add AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
+//Add Middleware exception
+builder.Services.AddTransient<ExceptionMiddleware>();
+
+//Add FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityValidator>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+// use middleware
+app.UseMiddleware<ExceptionMiddleware>();
 
 //app.UseAuthorization();
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()

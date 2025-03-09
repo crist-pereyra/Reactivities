@@ -34,7 +34,7 @@ export const useActivities = (id?: string) => {
       toast.success('Activity updated!');
       await queryClient.invalidateQueries({ queryKey: ['activities'] });
     },
-    onError: () => toast.error('Error updating activity!'),
+    // onError: () => toast.error('Error updating activity!'),
   });
 
   const createActivity = useMutation({
@@ -49,7 +49,7 @@ export const useActivities = (id?: string) => {
       toast.success('Activity created!');
       await queryClient.invalidateQueries({ queryKey: ['activities'] });
     },
-    onError: () => toast.error('Error creating activity!'),
+    // onError: () => toast.error('Error creating activity!'),
   });
 
   const deleteActivity = useMutation({
@@ -61,7 +61,7 @@ export const useActivities = (id?: string) => {
       toast.success('Activity deleted!');
       await queryClient.invalidateQueries({ queryKey: ['activities'] });
     },
-    onError: () => toast.error('Error deleting activity!'),
+    // onError: () => toast.error('Error deleting activity!'),
   });
   return {
     activities,

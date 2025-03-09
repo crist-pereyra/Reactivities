@@ -18,6 +18,7 @@ export const Navbar = () => {
           <div className='flex gap-3'>
             <MenuItemLink to='/activities'>Activities</MenuItemLink>
             <MenuItemLink to='/createActivity'>Create Activity</MenuItemLink>
+            <MenuItemLink to='/errors'>Errors</MenuItemLink>
           </div>
         </div>
         <div className='flex gap-2'>
@@ -31,7 +32,7 @@ export const Navbar = () => {
             className='absolute bottom-0 left-0 h-1 bg-primary'
             initial={{ width: '0%' }}
             animate={{ width: '100%' }}
-            transition={{ duration: 1.5, ease: 'easeInOut' }}
+            transition={{ duration: 1.5, ease: 'easeInOut', repeat: Infinity }}
           />
         )}
       </header>
