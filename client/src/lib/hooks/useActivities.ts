@@ -3,17 +3,19 @@ import { Activity } from '@/lib/interfaces/activity';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
+import { useAccount } from './useAccount';
 
 export const useActivities = (id?: string) => {
   const queryClient = useQueryClient();
+  const { currentUser } = useAccount();
   const location = useLocation();
-  const { data: activities, isPending } = useQuery({
+  const { data: activities, isFetching } = useQuery({
     queryKey: ['activities'],
     queryFn: async () => {
       const { data } = await activityApi.get<Activity[]>('/activities');
       return data;
     },
-    enabled: !id && location.pathname === '/activities',
+    enabled: !id && location.pathname === '/activities' && !!currentUser,
     // staleTime: 1000 * 60 * 5,
   });
   const { data: activity, isLoading: isActivityLoading } = useQuery({
@@ -22,7 +24,7 @@ export const useActivities = (id?: string) => {
       const { data } = await activityApi.get<Activity>(`/activities/${id}`);
       return data;
     },
-    enabled: !!id,
+    enabled: !!id && !!currentUser,
   });
 
   const updateActivity = useMutation({
@@ -65,7 +67,7 @@ export const useActivities = (id?: string) => {
   });
   return {
     activities,
-    isPending,
+    isFetching,
     updateActivity,
     createActivity,
     deleteActivity,

@@ -5,6 +5,7 @@ import { router } from '@/app/router/router';
 
 const activityApi = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
 });
 
 activityApi.interceptors.request.use((config) => {
@@ -30,8 +31,8 @@ activityApi.interceptors.response.use(
               modalStateErrors.push(data.errors[key]);
             }
           }
-          // throw modalStateErrors.flat();
           toast.error(modalStateErrors.flat().join(', '));
+          throw modalStateErrors.flat();
         } else {
           toast.error(data || 'Bad request!');
         }

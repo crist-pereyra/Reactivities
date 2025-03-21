@@ -1,3 +1,5 @@
+export * from './account/login-form';
+export * from './account/register-form';
 export * from './activities/dashboard/activity-card';
 export * from './activities/dashboard/activity-dashboard';
 export * from './activities/dashboard/activity-filters';
@@ -8,6 +10,7 @@ export * from './activities/details/activity-detail-info';
 export * from './activities/details/activity-detail-page';
 export * from './activities/details/activity-detail-sidebar';
 export * from './activities/form/activity-form';
+export * from './activities/form/catergory-options';
 export * from './activities/skeleton/activity-card-skeleton';
 export * from './activities/skeleton/activity-detail-skeleton';
 export * from './errors/not-found';

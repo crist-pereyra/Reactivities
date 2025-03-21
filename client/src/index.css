@@ -131,3 +131,12 @@
     @apply bg-primary-foreground text-foreground selection:bg-primary/90 selection:text-background;
   }
 }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

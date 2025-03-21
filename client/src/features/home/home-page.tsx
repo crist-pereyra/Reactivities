@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Moon, Sun, ArrowRight, Users } from 'lucide-react';
+import { Moon, Sun, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { UsersIcon } from '@/components/ui/users';
 
 function ElegantShape({
   className,
@@ -243,11 +244,8 @@ export const HomePage = () => {
                 : 'bg-black/[0.03] border-black/[0.08]'
             )}
           >
-            <Users
-              className={cn(
-                'size-5 my-2',
-                isDark ? 'text-white' : 'text-black'
-              )}
+            <UsersIcon
+              className={cn('my-2', isDark ? 'text-white' : 'text-black')}
             />
           </motion.div>
           <motion.div

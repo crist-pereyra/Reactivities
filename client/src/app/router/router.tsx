@@ -5,10 +5,13 @@ import {
   ActivityDetailPage,
   ActivityForm,
   HomePage,
+  LoginForm,
   NotFound,
+  RegisterForm,
   ServerError,
   TestErrors,
 } from '@/features';
+import { RequireAuth } from './RequireAuth';
 
 export const router = createBrowserRouter([
   {
@@ -16,24 +19,37 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
+        element: <RequireAuth />,
+        children: [
+          {
+            path: 'activities',
+            element: <ActivityDashboard />,
+          },
+          {
+            path: 'createActivity',
+            element: <ActivityForm key='create' />,
+          },
+          {
+            path: 'activities/:id',
+            element: <ActivityDetailPage />,
+          },
+          {
+            path: 'manage/:id',
+            element: <ActivityForm />,
+          },
+        ],
+      },
+      {
         path: '',
         element: <HomePage />,
       },
       {
-        path: 'activities',
-        element: <ActivityDashboard />,
+        path: 'login',
+        element: <LoginForm />,
       },
       {
-        path: 'createActivity',
-        element: <ActivityForm key='create' />,
-      },
-      {
-        path: 'activities/:id',
-        element: <ActivityDetailPage />,
-      },
-      {
-        path: 'manage/:id',
-        element: <ActivityForm />,
+        path: 'register',
+        element: <RegisterForm />,
       },
       {
         path: 'errors',
