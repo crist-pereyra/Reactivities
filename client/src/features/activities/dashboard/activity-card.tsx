@@ -14,19 +14,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Clock, MapPin } from 'lucide-react';
+import { AvatarHoverCard } from '@/components/shared/avatar-hover-card';
 
 interface Props {
   activity: Activity;
 }
 export const ActivityCard = ({ activity }: Props) => {
-  const isHost = false;
-  const isGoing = false;
-  const label = isHost
+  const label = activity.isHost
     ? 'You are hosting this activity'
-    : isGoing
+    : activity.isGoing
     ? 'You are going'
     : 'Join Activity';
-  const isCancelled = false;
+
   const navigate = useNavigate();
   return (
     <Card>
@@ -36,24 +35,31 @@ export const ActivityCard = ({ activity }: Props) => {
             <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <div>
-            <CardTitle>{activity.title}</CardTitle>
-            <CardDescription>
-              Hosted by{' '}
-              <Link
-                className='font-semibold hover:underline'
-                to={'/profile/shadcn'}
-              >
-                Shadcn
-              </Link>
-              <Badge
-                className='block mt-2'
-                variant={
-                  isCancelled ? 'destructive' : isGoing ? 'outline' : 'default'
-                }
-              >
-                {label}
-              </Badge>
+          <div className='flex justify-between w-full'>
+            <div>
+              <CardTitle>{activity.title}</CardTitle>
+              <p>
+                Hosted by{' '}
+                <Link
+                  className='font-semibold hover:underline'
+                  to={`/profile/${activity.hostId}`}
+                >
+                  {activity.hostDisplayName}
+                </Link>
+              </p>
+            </div>
+            <CardDescription className='flex flex-col items-end gap-1'>
+              {(activity.isHost || activity.isGoing) && (
+                <Badge
+                  className='block mt-2'
+                  variant={activity.isHost ? 'default' : 'outline'}
+                >
+                  {label}
+                </Badge>
+              )}
+              {activity.isCancelled && (
+                <Badge variant='destructive'>Cancelled</Badge>
+              )}
             </CardDescription>
           </div>
         </div>
@@ -70,7 +76,13 @@ export const ActivityCard = ({ activity }: Props) => {
           <p>{activity.city}</p>
         </div>
       </CardContent>
-      <div className='bg-primary-foreground p-5'>Attendees go here</div>
+      <div className='bg-primary-foreground p-5 flex'>
+        {activity.attendees.map((a) => (
+          <Link key={a.id} to={`/profile/${a.id}`} className='mr-[-10px]'>
+            <AvatarHoverCard profile={a} />
+          </Link>
+        ))}
+      </div>
       <CardFooter className='flex justify-between'>
         <Badge variant='secondary'>{activity.category}</Badge>
         <Button onClick={() => navigate(`/activities/${activity.id}`)}>

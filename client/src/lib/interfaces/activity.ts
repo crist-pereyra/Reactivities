@@ -9,4 +9,16 @@ export interface Activity {
   venue: string;
   latitude: number;
   longitude: number;
+  attendees: Profile[];
+  isGoing: boolean;
+  isHost: boolean;
+  hostId: string;
+  hostDisplayName: string;
+}
+
+export interface Profile {
+  id: string;
+  displayName: string;
+  bio?: string;
+  imageUrl?: string;
 }

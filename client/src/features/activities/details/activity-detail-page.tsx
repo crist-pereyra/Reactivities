@@ -21,7 +21,7 @@ export const ActivityDetailPage = () => {
           <ActivityDetailChat />
         </div>
         <div className='md:col-span-1'>
-          <ActivityDetailSidebar />
+          <ActivityDetailSidebar activity={activity} />
         </div>
       </div>
     </div>

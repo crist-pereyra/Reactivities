@@ -2,7 +2,7 @@ import { Navbar } from '@/components/shared/navbar';
 import { ThemeProvider } from '@/components/shared/theme-provider';
 import { HomePage } from '@/features';
 import { useUiStore } from '@/lib/stores/ui.store';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 function App() {
@@ -10,6 +10,7 @@ function App() {
   const isLoading = useUiStore((state) => state.isLoading);
   return (
     <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
+      <ScrollRestoration />
       {location.pathname === '/' ? (
         <HomePage />
       ) : location.pathname.startsWith('/login') ||

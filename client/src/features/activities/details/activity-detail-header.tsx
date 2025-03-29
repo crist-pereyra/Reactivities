@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useActivities } from '@/lib/hooks/useActivities';
 import { Activity } from '@/lib/interfaces/activity';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
@@ -8,14 +9,11 @@ interface Props {
   activity: Activity;
 }
 export const ActivityDetailHeader = ({ activity }: Props) => {
-  const isCancelled = false;
-  const isHost = true;
-  const isGoing = true;
-  const loading = false;
+  const { updateAttendance } = useActivities(activity.id);
 
   return (
     <div className='relative mb-4 rounded-lg overflow-hidden'>
-      {isCancelled && (
+      {activity.isCancelled && (
         <Badge
           variant='destructive'
           className='absolute left-10 top-5 z-50 px-3 py-1 text-sm'
@@ -42,35 +40,44 @@ export const ActivityDetailHeader = ({ activity }: Props) => {
           <p className='text-xs'>
             Hosted by{' '}
             <Link
-              to={`/profiles/username`}
+              to={`/profile/${activity.hostId}`}
               className='text-white font-bold hover:underline'
             >
-              Bob
+              {activity.hostDisplayName}
             </Link>
           </p>
         </div>
 
         {/* Buttons aligned to the right */}
         <div className='flex gap-2'>
-          {isHost ? (
+          {activity.isHost ? (
             <>
               <Button
-                variant={isCancelled ? 'default' : 'destructive'}
-                onClick={() => {}}
+                variant={activity.isCancelled ? 'default' : 'destructive'}
+                onClick={() => updateAttendance.mutate(activity.id)}
+                disabled={updateAttendance.isPending}
               >
-                {isCancelled ? 'Re-activate Activity' : 'Cancel Activity'}
+                {activity.isCancelled
+                  ? 'Re-activate Activity'
+                  : 'Cancel Activity'}
               </Button>
-              <Button variant='default' asChild disabled={isCancelled}>
-                <Link to={`/manage/${activity.id}`}>Manage Event</Link>
+              <Button
+                variant='secondary'
+                asChild
+                disabled={activity.isCancelled}
+              >
+                <Link to={activity.isCancelled ? '' : `/manage/${activity.id}`}>
+                  Manage Event
+                </Link>
               </Button>
             </>
           ) : (
             <Button
-              variant={isGoing ? 'default' : 'secondary'}
-              onClick={() => {}}
-              disabled={isCancelled || loading}
+              variant={activity.isGoing ? 'default' : 'secondary'}
+              onClick={() => updateAttendance.mutate(activity.id)}
+              disabled={updateAttendance.isPending || activity.isCancelled}
             >
-              {isGoing ? 'Cancel Attendance' : 'Join Activity'}
+              {activity.isGoing ? 'Cancel Attendance' : 'Join Activity'}
             </Button>
           )}
         </div>
