@@ -27,6 +27,8 @@ namespace Application.Core
                 .ForMember(dest => dest.Bio, opt => opt.MapFrom(src => src.User.Bio))
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.User.ImageUrl))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.User.Id));
+
+            CreateMap<User, UserProfile>();
         }
     }
 }
