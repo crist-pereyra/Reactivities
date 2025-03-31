@@ -486,3 +486,14 @@ API/appsettings.json
 API/reactivities.db
 API/reactivities.db-shm
 .gitignore
+/API/appsettings.Development.json
+/API/reactivities.db
+/API/reactivities.db-wal
+.gitignore
+API/appsettings.Development.json
+/API/reactivities.db-wal
+/API/appsettings.Development.json
+/API/reactivities.db
+/API/appsettings.Development.json
+/API/reactivities.db
+/API/reactivities.db-wal
