@@ -32,7 +32,10 @@ export const ActivityCard = ({ activity }: Props) => {
       <CardHeader>
         <div className='flex items-center gap-3'>
           <Avatar className='size-15'>
-            <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
+            <AvatarImage
+              src={activity.hostImageUrl || 'https://github.com/shadcn.png'}
+              alt={activity.hostDisplayName}
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className='flex justify-between w-full'>

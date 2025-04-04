@@ -22,6 +22,11 @@ export const ProfileCard = ({ profile }: Props) => {
         </Avatar>
         <div className='space-y-1 w-full'>
           <h5 className='text-sm font-semibold'>{profile.displayName}</h5>
+          {profile.bio && (
+            <p className='text-sm text-ellipsis overflow-hidden whitespace-nowrap'>
+              {profile.bio}
+            </p>
+          )}
           {following && <Badge variant='secondary'>Following</Badge>}
           <Separator />
           <div className='flex items-center space-x-1'>

@@ -21,7 +21,10 @@ export const MenuUser = () => {
       <MenubarMenu>
         <MenubarTrigger className='flex items-center gap-1'>
           <Avatar className='size-5'>
-            <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
+            <AvatarImage
+              src={currentUser?.imageUrl || 'https://github.com/shadcn.png'}
+              alt={currentUser?.displayName}
+            />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
           <span>{currentUser?.displayName}</span>
@@ -31,7 +34,7 @@ export const MenuUser = () => {
             <SquareActivityIcon />
             Create Activity
           </MenubarItem>
-          <MenubarItem onClick={() => navigate('/profile')}>
+          <MenubarItem onClick={() => navigate(`/profile/${currentUser?.id}`)}>
             <UserIcon />
             Profile
           </MenubarItem>

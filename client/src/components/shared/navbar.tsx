@@ -11,7 +11,7 @@ import { MenuUser } from './menu-user';
 export const Navbar = () => {
   const isLoading = useUiStore((state) => state.isLoading);
   const { currentUser } = useAccount();
-  console.log(currentUser);
+  // console.log(currentUser);
   return (
     <nav className='sticky h-14 top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
       <header className='flex justify-between max-w-7xl mx-auto items-center h-14 relative'>
