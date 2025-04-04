@@ -21,6 +21,9 @@ namespace API.Controllers
         [HttpPut("{photoId}/set-main-photo")]
         public async Task<ActionResult> SetMainPhoto(string photoId) => HandleResult(await Mediator.Send(new SetMainPhoto.Command { PhotoId = photoId }));
 
+        [HttpPut]
+        public async Task<ActionResult> UpdateProfile(EditProfile.Command command) => HandleResult(await Mediator.Send(command));
+
         [HttpDelete("{photoId}/photos")]
         public async Task<ActionResult> DeletePhoto(string photoId) => HandleResult(await Mediator.Send(new DeletePhoto.Command { PhotoId = photoId }));
     
