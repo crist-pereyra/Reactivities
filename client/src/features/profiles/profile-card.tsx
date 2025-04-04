@@ -23,7 +23,7 @@ export const ProfileCard = ({ profile }: Props) => {
         <div className='space-y-1 w-full'>
           <h5 className='text-sm font-semibold'>{profile.displayName}</h5>
           {profile.bio && (
-            <p className='text-sm text-ellipsis overflow-hidden whitespace-nowrap'>
+            <p className='text-sm text-ellipsis overflow-hidden whitespace-nowrap w-[65%]'>
               {profile.bio}
             </p>
           )}

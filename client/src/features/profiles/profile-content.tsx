@@ -10,7 +10,6 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from '@/components/ui/card';
 import { ProfilePhotos } from './profile-photos';
 import { ProfileAbout } from './profile-about';
@@ -44,7 +43,6 @@ export const ProfileContent = () => {
             <CardContent className='space-y-4'>
               <ProfilePhotos />
             </CardContent>
-            <CardFooter>{/* <Button>Change password</Button> */}</CardFooter>
           </Card>
         </VerticalTabsContent>
 

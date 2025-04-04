@@ -5,6 +5,7 @@ import { Photo } from '../interfaces/photo';
 import { useMemo } from 'react';
 import { User } from '../interfaces/user';
 import toast from 'react-hot-toast';
+import { EditProfileSchema } from '../validations/edit-profile.schema';
 
 export const useProfile = (id?: string) => {
   const queryClient = useQueryClient();
@@ -94,6 +95,29 @@ export const useProfile = (id?: string) => {
     },
   });
 
+  const updateProfile = useMutation({
+    mutationFn: async (profile: EditProfileSchema) => {
+      await activityApi.put(`/profiles`, profile);
+    },
+    onSuccess: (_, profile) => {
+      queryClient.setQueryData(['profile', id], (data: Profile) => {
+        if (!data) return data;
+        return {
+          ...data,
+          displayName: profile.displayName,
+          bio: profile.bio,
+        };
+      });
+      queryClient.setQueryData(['user'], (userData: User) => {
+        if (!userData) return userData;
+        return {
+          ...userData,
+          displayName: profile.displayName,
+        };
+      });
+    },
+  });
+
   const isCurrentUser = useMemo(() => {
     return id === queryClient.getQueryData<User>(['user'])?.id;
   }, [id, queryClient]);
@@ -107,5 +131,6 @@ export const useProfile = (id?: string) => {
     uploadPhoto,
     setMainPhoto,
     deletePhoto,
+    updateProfile,
   };
 };

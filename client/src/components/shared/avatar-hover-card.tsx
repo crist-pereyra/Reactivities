@@ -22,7 +22,7 @@ export const AvatarHoverCard = ({ profile }: Props) => {
           <AvatarFallback>{profile.displayName}</AvatarFallback>
         </Avatar>
       </HoverCardTrigger>
-      <HoverCardContent className='w-70'>
+      <HoverCardContent className='w-80'>
         <ProfileCard profile={profile} />
       </HoverCardContent>
     </HoverCard>
