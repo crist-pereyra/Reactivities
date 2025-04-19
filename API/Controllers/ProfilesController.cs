@@ -26,6 +26,11 @@ namespace API.Controllers
 
         [HttpDelete("{photoId}/photos")]
         public async Task<ActionResult> DeletePhoto(string photoId) => HandleResult(await Mediator.Send(new DeletePhoto.Command { PhotoId = photoId }));
-    
+
+        [HttpPost("{userId}/follow")]
+        public async Task<ActionResult> Follow(string userId) => HandleResult(await Mediator.Send(new FollowToggle.Command { TargetUserId = userId }));
+
+        [HttpGet("{userId}/follow-list")]
+        public async Task<ActionResult> GetFollowList(string userId, string predicate) => HandleResult(await Mediator.Send(new GetFollowings.Query { UserId = userId, Predicate = predicate }));
     }
 }

@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/card';
 import { ProfilePhotos } from './profile-photos';
 import { ProfileAbout } from './profile-about';
+import { ProfileFollowings } from './profile-followings';
 
 export const ProfileContent = () => {
   return (
@@ -61,31 +62,11 @@ export const ProfileContent = () => {
         </VerticalTabsContent>
 
         <VerticalTabsContent value='followers'>
-          <Card>
-            <CardHeader>
-              <CardTitle>Appearance</CardTitle>
-              <CardDescription>
-                Customize the appearance of the application.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>Appearance settings content goes here.</p>
-            </CardContent>
-          </Card>
+          <ProfileFollowings predicate='followers' />
         </VerticalTabsContent>
 
         <VerticalTabsContent value='following'>
-          <Card>
-            <CardHeader>
-              <CardTitle>Display</CardTitle>
-              <CardDescription>
-                Manage your display preferences.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>Display settings content goes here.</p>
-            </CardContent>
-          </Card>
+          <ProfileFollowings predicate='followings' />
         </VerticalTabsContent>
       </VerticalTabs>
     </>

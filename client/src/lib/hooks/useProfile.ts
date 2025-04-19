@@ -7,7 +7,7 @@ import { User } from '../interfaces/user';
 import toast from 'react-hot-toast';
 import { EditProfileSchema } from '../validations/edit-profile.schema';
 
-export const useProfile = (id?: string) => {
+export const useProfile = (id?: string, predicate?: string) => {
   const queryClient = useQueryClient();
 
   const { data: profile, isLoading: isLoadingProfile } = useQuery<Profile>({
@@ -16,7 +16,7 @@ export const useProfile = (id?: string) => {
       const { data } = await activityApi.get<Profile>(`/profiles/${id}`);
       return data;
     },
-    enabled: !!id,
+    enabled: !!id && !predicate,
   });
 
   const { data: photos, isLoading: isLoadingPhotos } = useQuery<Photo[]>({
@@ -25,7 +25,20 @@ export const useProfile = (id?: string) => {
       const { data } = await activityApi.get<Photo[]>(`/profiles/${id}/photos`);
       return data;
     },
-    enabled: !!id,
+    enabled: !!id && !predicate,
+  });
+
+  const { data: followings, isLoading: isLoadingFollowings } = useQuery<
+    Profile[]
+  >({
+    queryKey: ['followings', id, predicate],
+    queryFn: async () => {
+      const { data } = await activityApi.get<Profile[]>(
+        `/profiles/${id}/follow-list?predicate=${predicate}`
+      );
+      return data;
+    },
+    enabled: !!id && !!predicate,
   });
 
   const uploadPhoto = useMutation({
@@ -118,6 +131,25 @@ export const useProfile = (id?: string) => {
     },
   });
 
+  const updateFollowing = useMutation({
+    mutationFn: async () => await activityApi.post(`/profiles/${id}/follow`),
+    onSuccess: () => {
+      queryClient.setQueryData(['profile', id], (profile: Profile) => {
+        queryClient.invalidateQueries({
+          queryKey: ['followings', id, 'followers'],
+        });
+        if (!profile || profile.followersCount === undefined) return profile;
+        return {
+          ...profile,
+          following: !profile.following,
+          followersCount: profile.following
+            ? profile.followersCount - 1
+            : profile.followersCount + 1,
+        };
+      });
+    },
+  });
+
   const isCurrentUser = useMemo(() => {
     return id === queryClient.getQueryData<User>(['user'])?.id;
   }, [id, queryClient]);
@@ -132,5 +164,8 @@ export const useProfile = (id?: string) => {
     setMainPhoto,
     deletePhoto,
     updateProfile,
+    updateFollowing,
+    followings,
+    isLoadingFollowings,
   };
 };

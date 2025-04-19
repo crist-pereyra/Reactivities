@@ -8,8 +8,6 @@ interface Props {
 }
 
 export const ActivityDetailSidebar = ({ activity }: Props) => {
-  const following = true;
-
   return (
     <>
       <div className='text-center bg-primary text-primary-foreground p-4 rounded-t-lg'>
@@ -50,7 +48,7 @@ export const ActivityDetailSidebar = ({ activity }: Props) => {
                       Host
                     </Badge>
                   )}
-                  {following && (
+                  {attendee.following && (
                     <p className='text-sm text-orange-500'>Following</p>
                   )}
                 </div>

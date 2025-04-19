@@ -12,7 +12,7 @@ export const ProfilePage = () => {
   if (!profile) return <div className='mt-20'>Profile not found</div>;
   return (
     <div className='mt-20'>
-      <ProfileHeader profile={profile} />
+      <ProfileHeader />
       <ProfileContent />
     </div>
   );

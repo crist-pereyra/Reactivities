@@ -10,7 +10,6 @@ interface Props {
 }
 
 export const ProfileCard = ({ profile }: Props) => {
-  const following = false;
   return (
     <Link to={`/profile/${profile.id}`}>
       <div className='flex justify-between space-x-4'>
@@ -27,11 +26,13 @@ export const ProfileCard = ({ profile }: Props) => {
               {profile.bio}
             </p>
           )}
-          {following && <Badge variant='secondary'>Following</Badge>}
+          {profile.following && <Badge variant='secondary'>Following</Badge>}
           <Separator />
           <div className='flex items-center space-x-1'>
             <UsersIcon size={16} />
-            <span className='text-sm font-medium'>20 followers</span>
+            <span className='text-sm font-medium'>
+              {profile.followersCount} followers
+            </span>
           </div>
         </div>
       </div>

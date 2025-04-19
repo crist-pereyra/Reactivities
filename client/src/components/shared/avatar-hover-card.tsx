@@ -18,6 +18,9 @@ export const AvatarHoverCard = ({ profile }: Props) => {
           <AvatarImage
             src={profile.imageUrl || 'https://github.com/shadcn.png'}
             alt={profile.displayName}
+            className={`${
+              profile.following ? 'border-3 border-primary rounded-full' : ''
+            }`}
           />
           <AvatarFallback>{profile.displayName}</AvatarFallback>
         </Avatar>
