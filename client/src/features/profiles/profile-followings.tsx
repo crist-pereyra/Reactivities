@@ -35,6 +35,8 @@ export const ProfileFollowings = ({ predicate }: Props) => {
       <CardContent className='grid grid-cols-3 gap-3'>
         {isLoadingFollowings ? (
           <p>Loading...</p>
+        ) : followings?.length === 0 ? (
+          <p>No followings found.</p>
         ) : (
           followings?.map((profile) => (
             <Card key={profile.id} className='p-4'>

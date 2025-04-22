@@ -1,13 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Profile } from '../interfaces/activity';
+import { Activity, Profile } from '../interfaces/activity';
 import activityApi from '../api/activity.api';
 import { Photo } from '../interfaces/photo';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { User } from '../interfaces/user';
 import toast from 'react-hot-toast';
 import { EditProfileSchema } from '../validations/edit-profile.schema';
 
 export const useProfile = (id?: string, predicate?: string) => {
+  const [filter, setFilter] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const { data: profile, isLoading: isLoadingProfile } = useQuery<Profile>({
@@ -150,6 +151,24 @@ export const useProfile = (id?: string, predicate?: string) => {
     },
   });
 
+  const { data: userActivities, isLoading: isLoadingUserActivities } = useQuery(
+    {
+      queryKey: ['user-activities', filter],
+      queryFn: async () => {
+        const response = await activityApi.get<Activity[]>(
+          `/profiles/${id}/activities`,
+          {
+            params: {
+              filter,
+            },
+          }
+        );
+        return response.data;
+      },
+      enabled: !!id && !!filter,
+    }
+  );
+
   const isCurrentUser = useMemo(() => {
     return id === queryClient.getQueryData<User>(['user'])?.id;
   }, [id, queryClient]);
@@ -167,5 +186,9 @@ export const useProfile = (id?: string, predicate?: string) => {
     updateFollowing,
     followings,
     isLoadingFollowings,
+    userActivities,
+    isLoadingUserActivities,
+    filter,
+    setFilter,
   };
 };

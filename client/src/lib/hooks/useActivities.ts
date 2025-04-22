@@ -1,31 +1,67 @@
 import activityApi from '@/lib/api/activity.api';
 import { Activity } from '@/lib/interfaces/activity';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 import { useAccount } from './useAccount';
+import { PagedList } from '../interfaces/paged-list';
+import { useActivityStore } from '../stores/activity.store';
 
 export const useActivities = (id?: string) => {
+  const { filter, startDate } = useActivityStore();
   const queryClient = useQueryClient();
   const { currentUser } = useAccount();
   const location = useLocation();
-  const { data: activities, isFetching } = useQuery({
-    queryKey: ['activities'],
-    queryFn: async () => {
-      const { data } = await activityApi.get<Activity[]>('/activities');
+  const {
+    data: activitiesGroup,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery<PagedList<Activity, string>>({
+    queryKey: ['activities', filter, startDate],
+    queryFn: async ({ pageParam = null }) => {
+      const { data } = await activityApi.get<PagedList<Activity, string>>(
+        '/activities',
+        {
+          params: { cursor: pageParam, pageSize: 3, filter, startDate },
+        }
+      );
       return data;
     },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
     enabled: !id && location.pathname === '/activities' && !!currentUser,
-    // staleTime: 1000 * 60 * 5,
-    select: (data) => {
-      return data.map((activity) => ({
-        ...activity,
-        isHost: currentUser?.id === activity.hostId,
-        isGoing: activity.attendees.some((a) => a.id === currentUser?.id),
-        hostImageUrl: activity.attendees.find((a) => a.id === activity.hostId)
-          ?.imageUrl,
-      }));
-    },
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
+    // select: (data) => {
+    //   return data.map((activity) => ({
+    //     ...activity,
+    //     isHost: currentUser?.id === activity.hostId,
+    //     isGoing: activity.attendees.some((a) => a.id === currentUser?.id),
+    //     hostImageUrl: activity.attendees.find((a) => a.id === activity.hostId)
+    //       ?.imageUrl,
+    //   }));
+    // },
+    select: (data) => ({
+      ...data,
+      pages: data.pages.map((page) => ({
+        ...page,
+        items: page.items.map((activity) => ({
+          ...activity,
+          isHost: currentUser?.id === activity.hostId,
+          isGoing: activity.attendees.some((a) => a.id === currentUser?.id),
+          hostImageUrl: activity.attendees.find((a) => a.id === activity.hostId)
+            ?.imageUrl,
+        })),
+      })),
+    }),
   });
   const { data: activity, isLoading: isActivityLoading } = useQuery({
     queryKey: ['activity', id],
@@ -140,8 +176,11 @@ export const useActivities = (id?: string) => {
     // },
   });
   return {
-    activities,
-    isFetching,
+    activitiesGroup,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
     updateActivity,
     createActivity,
     deleteActivity,

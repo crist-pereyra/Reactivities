@@ -36,7 +36,7 @@ export function VerticalTabsList({
     <TabsList
       {...props}
       className={cn(
-        'flex h-auto min-w-[180px] flex-col items-stretch justify-start rounded-md p-1',
+        'flex h-auto max-h-96 min-w-[180px] flex-col items-stretch justify-start rounded-md p-1',
         className
       )}
     />

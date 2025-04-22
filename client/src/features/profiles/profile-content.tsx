@@ -14,6 +14,7 @@ import {
 import { ProfilePhotos } from './profile-photos';
 import { ProfileAbout } from './profile-about';
 import { ProfileFollowings } from './profile-followings';
+import { ProfileActivities } from './profile-activities';
 
 export const ProfileContent = () => {
   return (
@@ -50,13 +51,11 @@ export const ProfileContent = () => {
         <VerticalTabsContent value='events'>
           <Card>
             <CardHeader>
-              <CardTitle>Notifications</CardTitle>
-              <CardDescription>
-                Configure how you receive notifications and alerts.
-              </CardDescription>
+              <CardTitle>Events</CardTitle>
+              <CardDescription>View the events.</CardDescription>
             </CardHeader>
             <CardContent>
-              <p>Notification settings content goes here.</p>
+              <ProfileActivities />
             </CardContent>
           </Card>
         </VerticalTabsContent>

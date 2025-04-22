@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useActivityStore } from '@/lib/stores/activity.store';
 import { CalendarIcon, Filter } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 export const ActivityFilters = () => {
-  const [date, setDate] = useState<Date>();
+  const { startDate, setFilter, setStartDate, filter } = useActivityStore();
   const [month, setMonth] = useState<Date>(new Date());
   const dateLimit = new Date(
     new Date().setFullYear(new Date().getFullYear() + 50)
@@ -18,13 +19,13 @@ export const ActivityFilters = () => {
     const minYear = years[0];
     const minDate = new Date(minYear, 0, 1);
     if (parsedDate > dateLimit) {
-      setDate(dateLimit);
+      setStartDate(dateLimit);
       setMonth(dateLimit);
     } else if (parsedDate < minDate) {
-      setDate(minDate);
+      setStartDate(minDate);
       setMonth(minDate);
     } else {
-      setDate(parsedDate);
+      setStartDate(parsedDate);
       setMonth(parsedDate);
     }
   };
@@ -39,9 +40,24 @@ export const ActivityFilters = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className='flex flex-col gap-y-2'>
-          <Button variant={'outline'}>All events</Button>
-          <Button variant={'outline'}>I'm going</Button>
-          <Button variant={'outline'}>I'm hosting</Button>
+          <Button
+            variant={filter === 'all' ? 'default' : 'outline'}
+            onClick={() => setFilter('all')}
+          >
+            All events
+          </Button>
+          <Button
+            variant={filter === 'isGoing' ? 'default' : 'outline'}
+            onClick={() => setFilter('isGoing')}
+          >
+            I'm going
+          </Button>
+          <Button
+            variant={filter === 'isHost' ? 'default' : 'outline'}
+            onClick={() => setFilter('isHost')}
+          >
+            I'm hosting
+          </Button>
         </CardContent>
       </Card>
       <Card>
@@ -54,9 +70,9 @@ export const ActivityFilters = () => {
         <CardContent className='w-fit mx-auto'>
           <Calendar
             mode='single'
-            selected={date}
+            selected={new Date(startDate)}
             onSelect={(selectedDate) => {
-              setDate(selectedDate);
+              setStartDate(selectedDate as Date);
               handleDateChange(selectedDate!);
             }}
             disabled={(date) => date > dateLimit}

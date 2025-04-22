@@ -32,5 +32,8 @@ namespace API.Controllers
 
         [HttpGet("{userId}/follow-list")]
         public async Task<ActionResult> GetFollowList(string userId, string predicate) => HandleResult(await Mediator.Send(new GetFollowings.Query { UserId = userId, Predicate = predicate }));
+
+        [HttpGet("{userId}/activities")]
+        public async Task<IActionResult> GetUserActivities(string userId, string filter) => HandleResult(await Mediator.Send(new GetUserActivities.Query { UserId = userId, Filter = filter }));
     }
 }
