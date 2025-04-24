@@ -25,7 +25,7 @@ builder.Services.AddControllers(opt =>
 });
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 //Add Cors
@@ -84,13 +84,20 @@ app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
 app.UseAuthentication();
 app.UseAuthorization();
 
+//use build react
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
 
 app.MapGroup("api").MapIdentityApi<User>();
 
-//
 //Add SignalR
 app.MapHub<CommentHub>("/comments");
+
+//Add fallback build react
+app.MapFallbackToController("Index", "Fallback");
+
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 try
