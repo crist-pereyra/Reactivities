@@ -1,5 +1,3 @@
-# Reactivities
-
 # Reactivities 🧭
 
 Welcome to **Reactivities**, a real-time social activity hub that allows users to explore, join, and manage events with a powerful modern tech stack.
